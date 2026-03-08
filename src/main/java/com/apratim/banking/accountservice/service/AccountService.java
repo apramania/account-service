@@ -1,5 +1,8 @@
 package com.apratim.banking.accountservice.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.apratim.banking.accountservice.dto.AccountResponse;
 import com.apratim.banking.accountservice.dto.CreateAccountRequest;
 import com.apratim.banking.accountservice.dto.TransactionResponse;
@@ -21,6 +24,7 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
+    private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
 
     private final TransactionService transactionService;
 
@@ -70,6 +74,11 @@ public class AccountService {
     @Transactional
     public TransactionResponse transferMoney(TransferRequest request){
 
+        logger.info("Transfer initiated: from {} to {} amount {}",
+                request.getFromAccountNumber(),
+                request.getToAccountNumber(),
+                request.getAmount());
+
         Transaction transaction = new Transaction();
 
         Account fromAccount = accountRepository
@@ -83,6 +92,10 @@ public class AccountService {
                 .orElseThrow(() -> new AccountNotFoundException(
                         request.getToAccountNumber()
                 ));
+
+        logger.debug("Fetched account: fromAccount = {}, toAccount = {}",
+                fromAccount.getAccountNumber(),
+                toAccount.getAccountNumber());
 
         try {
             Thread.sleep(10000);
@@ -110,7 +123,15 @@ public class AccountService {
         accountRepository.save(toAccount);
 
         // call to transaction service
-        return transactionService.transferDetails(request,fromAccount,toAccount, "SUCCESS");
+        TransactionResponse transferDetails = transactionService
+                .transferDetails(request,fromAccount,toAccount, "SUCCESS");
+
+        logger.info("Transfer successful: from {} to {} amount {}",
+                request.getFromAccountNumber(),
+                request.getToAccountNumber(),
+                request.getAmount());
+
+        return transferDetails;
     }
 
 

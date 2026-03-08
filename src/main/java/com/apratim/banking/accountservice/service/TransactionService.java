@@ -5,6 +5,10 @@ import com.apratim.banking.accountservice.dto.TransferRequest;
 import com.apratim.banking.accountservice.entity.Account;
 import com.apratim.banking.accountservice.entity.Transaction;
 import com.apratim.banking.accountservice.repository.TransactionRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +19,7 @@ public class TransactionService {
 
 
     private final TransactionRepository transactionRepository;
+    private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
 
     public TransactionService(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
@@ -34,7 +39,27 @@ public class TransactionService {
 
         Transaction savedTransaction = transactionRepository.save(transaction);
 
+        logger.info("Saving transaction: from {} to {} amount {}",
+                transaction.getFromAccount().getAccountNumber(),
+                transaction.getToAccount().getAccountNumber(),
+                transaction.getAmount());
+
         return mapToResponse(savedTransaction);
+    }
+
+    public Page<TransactionResponse> getTransactionsByAccount(
+            String accountNumber,
+            Pageable pageable
+        ){
+
+        Page<Transaction> transactions = transactionRepository
+                .findByFromAccount_AccountNumberOrToAccount_AccountNumber(
+                        accountNumber,
+                        accountNumber,
+                        pageable
+                );
+
+        return transactions.map(this::mapToResponse);
     }
 
     private String generateTransactionReference() {

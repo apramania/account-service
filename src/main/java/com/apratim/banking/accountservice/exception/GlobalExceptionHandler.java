@@ -2,6 +2,8 @@ package com.apratim.banking.accountservice.exception;
 
 import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -13,6 +15,8 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(AccountNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleAccountNotFound(
@@ -26,6 +30,8 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 request.getRequestURI()
         );
+
+        logger.error("Account not found: {}", ex.getMessage());
 
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
@@ -42,6 +48,9 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 request.getRequestURI()
         );
+
+        logger.warn("Transfer failed due to insufficient balance: {}", ex.getMessage());
+
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
@@ -87,6 +96,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
     public ResponseEntity<String> handleOptimisticLock(ObjectOptimisticLockingFailureException ex){
+
+        logger.warn("Concurrent update detected: {}", ex.getMessage());
+
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body("Concurrent update detected. Please retry transaction.");

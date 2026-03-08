@@ -5,7 +5,10 @@ import com.apratim.banking.accountservice.dto.CreateAccountRequest;
 import com.apratim.banking.accountservice.dto.TransactionResponse;
 import com.apratim.banking.accountservice.dto.TransferRequest;
 import com.apratim.banking.accountservice.service.AccountService;
+import com.apratim.banking.accountservice.service.TransactionService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,9 +17,11 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
 
     private final AccountService accountService;
+    private final TransactionService transactionService;
 
-    public AccountController(AccountService accountService) {
+    public AccountController(AccountService accountService, TransactionService transactionService) {
         this.accountService = accountService;
+        this.transactionService = transactionService;
     }
 
     @PostMapping
@@ -37,5 +42,15 @@ public class AccountController {
             @Valid @RequestBody TransferRequest request
             ){
         return ResponseEntity.ok(accountService.transferMoney(request));
+    }
+
+    @GetMapping("/{accountNumber}/transactions")
+    public ResponseEntity<Page<TransactionResponse>> getTransactions(
+            @PathVariable String accountNumber,
+            Pageable pageable
+    ){
+        return ResponseEntity.ok(
+                transactionService.getTransactionsByAccount(accountNumber, pageable)
+        );
     }
 }
