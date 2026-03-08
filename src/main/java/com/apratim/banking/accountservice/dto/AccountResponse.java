@@ -13,6 +13,8 @@ public class AccountResponse {
     private BigDecimal balance;
     private String status;
 
+    private String accountNumber;
+
     public Long getId() {
         return id;
     }
@@ -45,12 +47,32 @@ public class AccountResponse {
         this.status = status;
     }
 
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public AccountResponse(Long id, String customerId, BigDecimal balance, String status, String accountNumber, LocalDateTime createdAt) {
+        this.id = id;
+        this.customerId = customerId;
+        this.balance = balance;
+        this.status = status;
+        this.accountNumber = accountNumber;
+        this.createdAt = createdAt;
+    }
+
+    public AccountResponse() {
     }
 
     private LocalDateTime createdAt;

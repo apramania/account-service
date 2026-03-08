@@ -19,6 +19,7 @@ public class Account {
                 ", customerId='" + customerId + '\'' +
                 ", balance=" + balance +
                 ", status='" + status + '\'' +
+                ", accountNumber='" + accountNumber + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
     }
@@ -36,6 +37,9 @@ public class Account {
     @Column(nullable = false)
     private String status;
 
+    @Column(unique = true, nullable = false)
+    private String accountNumber;
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
@@ -44,10 +48,14 @@ public class Account {
         this.createdAt = LocalDateTime.now();
     }
 
-    public Account(String customerId, BigDecimal balance, String status) {
+    public Account() {
+    }
+
+    public Account(String customerId, BigDecimal balance, String status, String accountNumber) {
         this.customerId = customerId;
         this.balance = balance;
         this.status = status;
+        this.accountNumber = accountNumber;
     }
 
     public Long getId() {
@@ -80,6 +88,14 @@ public class Account {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
     public LocalDateTime getCreatedAt() {
