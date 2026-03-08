@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Table(name = "accounts")
 @Getter
 @Setter
-@NoArgsConstructor
 public class Account {
     @Override
     public String toString() {
@@ -20,9 +19,13 @@ public class Account {
                 ", balance=" + balance +
                 ", status='" + status + '\'' +
                 ", accountNumber='" + accountNumber + '\'' +
+                ", version='" + version + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
     }
+
+    @Version
+    private Long version;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +59,15 @@ public class Account {
         this.balance = balance;
         this.status = status;
         this.accountNumber = accountNumber;
+        //this.version = version;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public Long getId() {

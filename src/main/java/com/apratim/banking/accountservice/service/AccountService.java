@@ -84,6 +84,12 @@ public class AccountService {
                         request.getToAccountNumber()
                 ));
 
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         if(request.getFromAccountNumber().equals(request.getToAccountNumber())){
             throw new IllegalArgumentException("Cannot transfer to same account");
         }
