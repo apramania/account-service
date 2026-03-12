@@ -28,14 +28,16 @@ public class AccountService {
     private static final BigDecimal DAILY_TRANSFER_LIMIT = new BigDecimal("10000");
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
+    private final NotificationService notificationService;
     private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
 
     private final TransactionService transactionService;
 
     public AccountService(AccountRepository accountRepository, TransactionRepository transactionRepository,
-                          TransactionService transactionService) {
+                          NotificationService notificationService, TransactionService transactionService) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
+        this.notificationService = notificationService;
         this.transactionService = transactionService;
     }
 
@@ -148,6 +150,18 @@ public class AccountService {
         // call to transaction service
         TransactionResponse transferDetails = transactionService
                 .transferDetails(request,fromAccount,toAccount, "SUCCESS");
+
+        notificationService.sendNotification(
+                fromAccount.getAccountNumber(),
+                "Transfer of amount " + request.getAmount() + " to account " +
+                        toAccount.getAccountNumber() + " successful",
+                "TRANSFER");
+
+        notificationService.sendNotification(
+                toAccount.getAccountNumber(),
+                "Received amount " + request.getAmount() + " from account " +
+                        fromAccount.getAccountNumber(),
+                "TRANSFER");
 
         logger.info("Transfer successful: from {} to {} amount {}",
                 request.getFromAccountNumber(),

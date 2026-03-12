@@ -19,13 +19,15 @@ public class RecurringTransactionService {
     private final RecurringTransactionRepository recurringTransactionRepository;
     private final AccountRepository accountRepository;
     private final AccountService accountService;
+    private final NotificationService notificationService;
 
 
     public RecurringTransactionService(RecurringTransactionRepository recurringTransactionRepository,
-                                       AccountRepository accountRepository, AccountService accountService) {
+                                       AccountRepository accountRepository, AccountService accountService, NotificationService notificationService) {
         this.recurringTransactionRepository = recurringTransactionRepository;
         this.accountRepository = accountRepository;
         this.accountService = accountService;
+        this.notificationService = notificationService;
     }
 
     public RecurringTransaction createRecurringTransaction(
@@ -75,6 +77,14 @@ public class RecurringTransactionService {
                 );
 
                 recurringTransactionRepository.save(recurring);
+
+                notificationService.sendNotification(
+                        recurring.getFromAccount().getAccountNumber(),
+                        "Recurring transfer of " + recurring.getAmount() +
+                                " to account " + recurring.getToAccount().getAccountNumber() +
+                                " executed successfully.",
+                        "RECURRING"
+                );
             }catch (Exception e){
                 System.out.println("Recurring transfer failed: " + e.getMessage());
             }
