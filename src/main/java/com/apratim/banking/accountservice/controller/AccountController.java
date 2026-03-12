@@ -53,4 +53,22 @@ public class AccountController {
                 transactionService.getTransactionsByAccount(accountNumber, pageable)
         );
     }
+
+    @PatchMapping("/{accountNumber}/freeze")
+    public ResponseEntity<AccountResponse> freezeAccount(
+            @PathVariable String accountNumber
+    ){
+        return ResponseEntity.ok(
+                accountService.freezeAccount(accountNumber)
+        );
+    }
+
+    @PatchMapping("/{accountNumber}/unfreeze")
+    public ResponseEntity<AccountResponse> unfreezeAccount(
+            @PathVariable String accountNumber
+    ){
+        return ResponseEntity.ok(
+                accountService.unfreezeAccount(accountNumber)
+        );
+    }
 }

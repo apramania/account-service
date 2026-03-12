@@ -1,5 +1,6 @@
 package com.apratim.banking.accountservice.entity;
 
+import com.apratim.banking.accountservice.model.AccountStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,8 +38,9 @@ public class Account {
     @Column(nullable = false)
     private BigDecimal balance;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private AccountStatus status;
 
     @Column(unique = true, nullable = false)
     private String accountNumber;
@@ -54,7 +56,7 @@ public class Account {
     public Account() {
     }
 
-    public Account(String customerId, BigDecimal balance, String status, String accountNumber) {
+    public Account(String customerId, BigDecimal balance, AccountStatus status, String accountNumber) {
         this.customerId = customerId;
         this.balance = balance;
         this.status = status;
@@ -94,11 +96,11 @@ public class Account {
         this.balance = balance;
     }
 
-    public String getStatus() {
+    public AccountStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(AccountStatus status) {
         this.status = status;
     }
 

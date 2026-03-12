@@ -1,5 +1,6 @@
 package com.apratim.banking.accountservice.dto;
 
+import com.apratim.banking.accountservice.model.AccountStatus;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,7 +12,7 @@ public class AccountResponse {
     private Long id;
     private String customerId;
     private BigDecimal balance;
-    private String status;
+    private AccountStatus status;
 
     private String accountNumber;
 
@@ -39,11 +40,11 @@ public class AccountResponse {
         this.balance = balance;
     }
 
-    public String getStatus() {
+    public AccountStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(AccountStatus status) {
         this.status = status;
     }
 
@@ -63,7 +64,8 @@ public class AccountResponse {
         this.createdAt = createdAt;
     }
 
-    public AccountResponse(Long id, String customerId, BigDecimal balance, String status, String accountNumber, LocalDateTime createdAt) {
+    public AccountResponse(Long id, String customerId, BigDecimal balance, AccountStatus status,
+                           String accountNumber, LocalDateTime createdAt) {
         this.id = id;
         this.customerId = customerId;
         this.balance = balance;

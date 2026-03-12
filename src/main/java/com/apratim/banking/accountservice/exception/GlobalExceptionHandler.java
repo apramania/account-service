@@ -103,4 +103,23 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body("Concurrent update detected. Please retry transaction.");
     }
+
+    @ExceptionHandler(TransferLimitExceedException.class)
+    public ResponseEntity<ErrorResponse> handleInsufficientBalance(
+            TransferLimitExceedException ex,
+            HttpServletRequest request){
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Request",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+
+        logger.warn("Daily Transfer limit exceeded: {}", ex.getMessage());
+
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }
