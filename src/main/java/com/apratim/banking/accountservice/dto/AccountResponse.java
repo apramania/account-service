@@ -1,13 +1,11 @@
 package com.apratim.banking.accountservice.dto;
 
 import com.apratim.banking.accountservice.model.AccountStatus;
-import lombok.Builder;
-import lombok.Data;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
 public class AccountResponse {
     private Long id;
     private String customerId;

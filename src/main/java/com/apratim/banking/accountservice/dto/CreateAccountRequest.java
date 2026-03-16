@@ -1,10 +1,9 @@
 package com.apratim.banking.accountservice.dto;
 
-import lombok.Data;
 
 import java.math.BigDecimal;
 
-@Data
+
 public class CreateAccountRequest {
     private String customerId;
     private BigDecimal initialBalance;

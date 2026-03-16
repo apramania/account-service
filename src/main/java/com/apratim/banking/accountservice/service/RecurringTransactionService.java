@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
+
 @Service
 public class RecurringTransactionService {
     private final RecurringTransactionRepository recurringTransactionRepository;
@@ -53,7 +55,7 @@ public class RecurringTransactionService {
         return recurringTransactionRepository.save(recurringTransaction);
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 1000000)
     public void executeDueRecurringTransactions(){
         List<RecurringTransaction> dueTransactions =
                 recurringTransactionRepository.findByNextExecutionDateBeforeAndStatus(
@@ -70,7 +72,8 @@ public class RecurringTransactionService {
                 transferRequest.setAmount(recurring.getAmount());
 
 
-                accountService.transferMoney(transferRequest);
+                String idempotencyKey = UUID.randomUUID().toString();
+                accountService.transferMoney(transferRequest, idempotencyKey);
 
                 recurring.setNextExecutionDate(
                         calculateNextExecutionDate(recurring.getFrequency())

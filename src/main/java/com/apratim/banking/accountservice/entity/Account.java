@@ -2,15 +2,12 @@ package com.apratim.banking.accountservice.entity;
 
 import com.apratim.banking.accountservice.model.AccountStatus;
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "accounts")
-@Getter
-@Setter
 public class Account {
     @Override
     public String toString() {

@@ -39,9 +39,10 @@ public class AccountController {
 
     @PostMapping("/transfer")
     public ResponseEntity<TransactionResponse> transferMoney(
+            @RequestHeader("Idempotency-Key") String idempotencyKey,
             @Valid @RequestBody TransferRequest request
             ){
-        return ResponseEntity.ok(accountService.transferMoney(request));
+        return ResponseEntity.ok(accountService.transferMoney(request, idempotencyKey));
     }
 
     @GetMapping("/{accountNumber}/transactions")
