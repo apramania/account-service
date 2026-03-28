@@ -223,7 +223,3 @@ The packaged JAR will be at `target/account-service-0.0.1-SNAPSHOT.jar`.
 5. Open a Pull Request
 
 ---
-
-## License
-
-This project is currently unlicensed. Add a `LICENSE` file to specify terms.
